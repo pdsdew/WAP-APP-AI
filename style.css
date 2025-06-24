@@ -1,0 +1,40 @@
+body {
+  font-family: 'Comic Neue', cursive, sans-serif;
+  background: linear-gradient(135deg, #00bcd4 0%, #008ba3 100%);
+  color: #fff;
+}
+
+.container {
+  background-color: rgba(10, 20, 30, 0.85);
+  border: 3px solid #00e5ff;
+  box-shadow: 0 0 15px #00e5ff;
+}
+
+button {
+  background: linear-gradient(45deg, #00e5ff, #008ba3);
+  border: 2px solid #00bcd4;
+  font-weight: 700;
+  box-shadow: 0 4px 8px #00bcd4aa;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: linear-gradient(45deg, #008ba3, #00e5ff);
+  box-shadow: 0 6px 14px #00e5ffaa;
+  transform: translateY(-3px);
+}
+
+input {
+  border: 2px solid #00bcd4;
+  padding-left: 40px;
+  background: url('data:image/svg+xml;utf8,<svg fill="%2300bcd4" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/></svg>') no-repeat 10px center;
+  background-size: 20px 20px;
+}
+
+.result {
+  font-family: 'Courier New', monospace;
+  background: #0008;
+  border-left: 6px solid #00e5ff;
+  padding: 20px;
+}
