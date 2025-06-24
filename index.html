@@ -312,7 +312,13 @@ video, canvas {
 </script>
   <script>
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
+    navigator.serviceWorker.register('/script.js')
+      .then(() => console.log('Service Worker registered'));
+  }
+</script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/scrip.js')
       .then(reg => console.log('✅ Service Worker registered', reg))
       .catch(err => console.error('❌ SW registration failed:', err));
   }
