@@ -2,7 +2,7 @@
   "name": "ระบบกล้องตรวจทะเบียน",
   "short_name": "ตรวจทะเบียน",
   "start_url": ".",
-  "display": "standalone",
+  "display": "fullscreen",
   "background_color": "#008ba3",
   "theme_color": "#00bcd4",
   "icons": [
