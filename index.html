@@ -195,8 +195,9 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
 <script>
-  // Firebase Config ของคุณ
+  // Firebase Config (ของคุณ)
   const firebaseConfig = {
     apiKey: "AIzaSyBC2D4ZGYnYo3DYk-D98Wj6GhO2n8TKpv0",
     authDomain: "ai-lpr-b6bb1.firebaseapp.com",
@@ -209,7 +210,7 @@
   const auth = firebase.auth();
   const db = firebase.firestore();
 
-  // ================= LOGIN / SIGNUP =================
+  // ฟังก์ชันเข้าสู่ระบบ
   function login() {
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
@@ -219,14 +220,12 @@
     auth.signInWithEmailAndPassword(email, password)
       .then(() => {
         resultBox.textContent = "✅ สำเร็จ! กำลังเข้าสู่ระบบ...";
-        setTimeout(() => {
-          resultBox.style.display = "none";
-        }, 600);
+        setTimeout(() => { location.reload(); }, 800);
       })
-      .catch(e => {
-        resultBox.textContent = "❌ " + e.message;
-      });
+      .catch(e => { resultBox.textContent = "❌ " + e.message; });
   }
+
+  // ฟังก์ชันสมัครสมาชิก
   function signup() {
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
@@ -235,7 +234,6 @@
     if (!email || !password) return resultBox.textContent = "⚠️ กรอกอีเมลและรหัสผ่าน";
     auth.createUserWithEmailAndPassword(email, password)
       .then(cred => {
-        // เพิ่ม users document โดยใช้ uid
         return db.collection("users").doc(cred.user.uid).set({
           email: email,
           role: "user"
@@ -244,6 +242,7 @@
       .then(() => resultBox.textContent = "✅ สมัครเรียบร้อย ล็อกอินได้เลย!")
       .catch(e => resultBox.textContent = "❌ " + e.message);
   }
+</script>
   function logout() {
     auth.signOut().then(() => {
       document.getElementById("authSection").style.display = "block";
