@@ -4,25 +4,94 @@
   <meta charset="UTF-8" />
   <title>AI Camera สแกนทะเบียนรถ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap');
-    body { font-family: 'Prompt', sans-serif; background: linear-gradient(120deg, #2b5876 0%, #4e4376 100%); min-height: 100vh; margin: 0; color: #fff; padding: 0; overflow-x: hidden; }
-    .main-card { margin: 30px auto 0 auto; max-width: 390px; background: rgba(30,40,60,0.88); border-radius: 28px; padding: 34px 18px 30px; box-shadow: 0 10px 40px #2b587680; position: relative; animation: fadeInDown 1s; backdrop-filter: blur(6px);}
-    .main-card::before { content: ""; position: absolute; inset: 0; border-radius: 30px; z-index: -1; background: linear-gradient(135deg, #00e5ff33 0%, #ff4081 100%); filter: blur(20px); opacity: 0.4;}
-    .main-card h2, .main-card h3 { font-weight: 700; letter-spacing: 1px; font-size: 2rem; text-shadow: 0 2px 16px #1e2942cc; margin-bottom: 12px; color: #00e5ff;}
-    .main-card .bigicon { font-size: 60px; color: #fff; background: linear-gradient(45deg, #00e5ff 60%, #e040fb 120%); border-radius: 20px; width: 80px; height: 80px; line-height: 80px; margin: 0 auto 12px auto; box-shadow: 0 6px 20px #00e5ff33; display: flex; align-items: center; justify-content: center; animation: bounceIn 1.2s;}
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(120deg, #2b5876 0%, #4e4376 100%);
+      min-height: 100vh; margin: 0; color: #fff; padding: 0; overflow-x: hidden;
+    }
+    .main-card {
+      margin: 30px auto 0 auto;
+      max-width: 390px;
+      background: rgba(30,40,60,0.88);
+      border-radius: 28px;
+      padding: 34px 18px 30px;
+      box-shadow: 0 10px 40px #2b587680;
+      position: relative;
+      animation: fadeInDown 1s;
+      backdrop-filter: blur(6px);
+    }
+    .main-card::before {
+      content: "";
+      position: absolute; inset: 0; border-radius: 30px; z-index: -1;
+      background: linear-gradient(135deg, #00e5ff33 0%, #ff4081 100%);
+      filter: blur(20px); opacity: 0.4;
+    }
+    .main-card h2, .main-card h3 {
+      font-weight: 700; letter-spacing: 1px;
+      font-size: 2rem; text-shadow: 0 2px 16px #1e2942cc;
+      margin-bottom: 12px; color: #00e5ff;
+    }
+    .main-card .bigicon {
+      font-size: 60px;
+      color: #fff;
+      background: linear-gradient(45deg, #00e5ff 60%, #e040fb 120%);
+      border-radius: 20px;
+      width: 80px; height: 80px; line-height: 80px;
+      margin: 0 auto 12px auto;
+      box-shadow: 0 6px 20px #00e5ff33;
+      display: flex; align-items: center; justify-content: center;
+      animation: bounceIn 1.2s;
+    }
     .form-section, #mainSection, #cameraSection, #registerSection { margin: 14px 0 4px; }
     .input-group { position: relative; margin-bottom: 18px;}
-    .input-group .material-icons { position: absolute; left: 14px; top: 12px; color: #00e5ff; opacity: 0.8; font-size: 24px; }
-    .input-group input { width: 100%; max-width: 280px; padding: 11px 15px 11px 40px; border-radius: 13px; border: none; background: #fff4; color: #fff; font-size: 15px; outline: none; transition: box-shadow .2s; box-shadow: 0 1px 8px #00e5ff22; margin: 0 auto 12px auto; display: block; }
+    .input-group .material-icons {
+      position: absolute; left: 14px; top: 12px; color: #00e5ff; opacity: 0.8; font-size: 24px;
+    }
+    .input-group input {
+      width: 100%;
+      max-width: 280px;
+      padding: 11px 15px 11px 40px;
+      border-radius: 13px;
+      border: none;
+      background: #fff4;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      transition: box-shadow .2s;
+      box-shadow: 0 1px 8px #00e5ff22;
+      margin: 0 auto 12px auto;
+      display: block;
+    }
     .input-group input:focus { background: #ffffff66; color: #333; box-shadow: 0 4px 16px #00e5ff99; }
-    .btn-main, button { width: 100%; padding: 13px 0; border-radius: 22px; background: linear-gradient(45deg, #00e5ff, #e040fb 95%); border: none; font-weight: bold; font-size: 17px; color: #fff; cursor: pointer; margin-bottom: 10px; margin-top: 5px; box-shadow: 0 4px 12px #e040fb44; transition: transform .14s, box-shadow .14s;}
-    .btn-main:hover, button:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 30px #00e5ff55; background: linear-gradient(45deg, #e040fb, #00e5ff 90%);}
+    .btn-main, button {
+      width: 100%; padding: 13px 0; border-radius: 22px;
+      background: linear-gradient(45deg, #00e5ff, #e040fb 95%);
+      border: none; font-weight: bold; font-size: 17px;
+      color: #fff; cursor: pointer; margin-bottom: 10px; margin-top: 5px;
+      box-shadow: 0 4px 12px #e040fb44; transition: transform .14s, box-shadow .14s;
+    }
+    .btn-main:hover, button:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 8px 30px #00e5ff55;
+      background: linear-gradient(45deg, #e040fb, #00e5ff 90%);
+    }
     .login-tips { text-align: left; font-size: 14px; color: #a5e9ff; margin-bottom: 8px; }
-    .copyright { margin: 30px auto 0; color: #b7daf2; font-size: 13px; opacity: 0.8; text-align: center; letter-spacing: 0.5px;}
-    .result-card, #result { margin-top: 20px; padding: 17px; border-radius: 14px; background: rgba(0, 229, 255, 0.11); color: #fff; font-family: 'Courier New', monospace; font-size: 15.5px; box-shadow: 0 2px 12px #00e5ff33; min-height: 50px; white-space: pre-line; word-break: break-word; animation: fadeInUp 1.2s; display: none;}
+    .copyright {
+      margin: 30px auto 0;
+      color: #b7daf2; font-size: 13px; opacity: 0.8; text-align: center; letter-spacing: 0.5px;
+    }
+    .result-card, #result {
+      margin-top: 20px; padding: 17px; border-radius: 14px;
+      background: rgba(0, 229, 255, 0.11); color: #fff; font-family: 'Courier New', monospace;
+      font-size: 15.5px; box-shadow: 0 2px 12px #00e5ff33; min-height: 50px;
+      white-space: pre-line; word-break: break-word;
+      animation: fadeInUp 1.2s;
+      display: none;
+    }
     #mainSection, #cameraSection, #registerSection { display: none; }
     video, canvas { width: 100%; border-radius: 14px; margin-top: 8px; background: #000; }
     @media (max-width: 500px) { .main-card { margin: 15px 2px 0 2px; } .copyright { font-size: 11px;}}
@@ -101,6 +170,7 @@
     <div id="result" class="result-card"></div>
     <button style="background:#00bfae; margin-top:12px;" onclick="backToMenu()">↩️ กลับเมนู</button>
   </div>
+
   <!-- REGISTER -->
   <div id="registerSection" style="display:none;">
     <h3>📝 ลงทะเบียนเจ้าของรถ</h3>
@@ -121,12 +191,12 @@
   © 2025 AI License Plate Scanner<br>
   <span style="font-size:11px;">Design by <b>คุณเอง + ChatGPT</b></span>
 </div>
+
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 <script>
-  // Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyBC2D4ZGYnYo3DYk-D98Wj6GhO2n8TKpv0",
     authDomain: "ai-lpr-b6bb1.firebaseapp.com",
@@ -140,10 +210,10 @@
   const db = firebase.firestore();
 
   // BIND EVENTS
-  document.getElementById("loginForm").onsubmit = function(e) { e.preventDefault(); login(); };
+  document.getElementById("loginForm").onsubmit = e => { e.preventDefault(); login(); };
   document.getElementById("signupBtn").onclick = signup;
 
-  // ===== LOGIN & SIGNUP =====
+  // LOGIN
   function login() {
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
@@ -157,6 +227,8 @@
       })
       .catch(e => { resultBox.textContent = "❌ " + e.message; });
   }
+
+  // SIGNUP
   function signup() {
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
@@ -173,6 +245,8 @@
       .then(() => resultBox.textContent = "✅ สมัครเรียบร้อย ล็อกอินได้เลย!")
       .catch(e => resultBox.textContent = "❌ " + e.message);
   }
+
+  // LOGOUT
   function logout() {
     auth.signOut().then(() => {
       document.getElementById("authSection").style.display = "block";
@@ -189,7 +263,25 @@
     });
   }
 
-  // ===== MENU =====
+  // MENU CONTROL
+  function showAdminMenu() {
+    document.getElementById("authSection").style.display = "none";
+    document.getElementById("adminMenu").style.display = "block";
+    document.getElementById("userMenu").style.display = "none";
+    document.getElementById("cameraSection").style.display = "none";
+    document.getElementById("registerSection").style.display = "none";
+    document.getElementById("userManagerSection").style.display = "none";
+    document.getElementById("blacklistSection").style.display = "none";
+  }
+  function showUserMenu() {
+    document.getElementById("authSection").style.display = "none";
+    document.getElementById("adminMenu").style.display = "none";
+    document.getElementById("userMenu").style.display = "block";
+    document.getElementById("cameraSection").style.display = "none";
+    document.getElementById("registerSection").style.display = "none";
+    document.getElementById("userManagerSection").style.display = "none";
+    document.getElementById("blacklistSection").style.display = "none";
+  }
   function showCameraSection() {
     document.getElementById("adminMenu").style.display = "none";
     document.getElementById("userMenu").style.display = "none";
@@ -232,7 +324,7 @@
     if (videoStream) videoStream.getTracks().forEach(track => track.stop());
   }
 
-  // ===== USER MANAGER (ADMIN) =====
+  // USER MANAGER
   function showUserManager() {
     document.getElementById("adminMenu").style.display = "none";
     document.getElementById("userManagerSection").style.display = "block";
@@ -245,133 +337,113 @@
         html += `
           <div style="background:#fff2;padding:12px 10px;margin-bottom:8px;border-radius:12px;box-shadow:0 1px 7px #00e5ff20;">
             <b>Email:</b> ${u.email || "(ไม่พบอีเมล)"}<br>
-          <b>Role:</b>
-<select onchange="updateUserRole('${doc.id}', this.value)">
-  <option value="user" ${u.role === "user" ? "selected" : ""}>user</option>
-  <option value="admin" ${u.role === "admin" ? "selected" : ""}>admin</option>
-</select>
-<button onclick="deleteUser('${doc.id}')" style="background:#ff5e57; margin-left:12px;padding:3px 13px; border-radius:9px;">ลบ</button>
-</div>
-`;
-});
-document.getElementById("userManagerList").innerHTML = html || "ไม่พบผู้ใช้ในระบบ";
-});
-}
-function updateUserRole(uid, role) {
-db.collection("users").doc(uid).update({ role }).then(showUserManager);
-}
-function deleteUser(uid) {
-if (!confirm("⚠️ ต้องการลบผู้ใช้นี้จริงหรือไม่?")) return;
-db.collection("users").doc(uid).delete().then(showUserManager);
-// ลบ Auth จริงต้องใช้ Admin SDK (Server)
-}
-function backToAdminMenu() {
-showAdminMenu();
-}
-
-// ===== BLACKLIST MANAGER (ADMIN) =====
-function showBlacklist() {
-document.getElementById("adminMenu").style.display = "none";
-document.getElementById("blacklistSection").style.display = "block";
-document.getElementById("userManagerSection").style.display = "none";
-document.getElementById("blacklistList").innerHTML = "⏳ กำลังโหลด...";
-db.collection("blacklist").orderBy("plate").get().then(snapshot => {
-let html = "";
-snapshot.forEach(doc => {
-  const data = doc.data();
-  html += `
-    <div style="background:#fff2; margin-bottom:10px; padding:11px 12px; border-radius:12px; box-shadow:0 1px 7px #00e5ff20;">
-      <b>🚗 ทะเบียน:</b> ${data.plate}
-      <button onclick="deleteBlacklist('${doc.id}')" style="background:#ff5e57; margin-left:15px;padding:3px 13px; border-radius:9px;">ลบ</button>
-    </div>
-  `;
-});
-document.getElementById("blacklistList").innerHTML = html || "<i>ไม่มีทะเบียนที่ถูกแบล็คลิสต์</i>";
-});
-}
-function addBlacklist() {
-const plate = document.getElementById("blacklistPlateInput").value.trim();
-if (!plate) return alert("กรุณากรอกป้ายทะเบียน");
-db.collection("blacklist").add({ plate })
-  .then(() => {
-    document.getElementById("blacklistPlateInput").value = "";
-    showBlacklist();
-  });
-}
-function deleteBlacklist(id) {
-if (!confirm("ลบทะเบียนนี้ออกจากแบล็คลิสต์จริงหรือไม่?")) return;
-db.collection("blacklist").doc(id).delete().then(showBlacklist);
-}
-
-// ===== ADMIN/USER MENU DISPLAY =====
-function showAdminMenu() {
-document.getElementById("authSection").style.display = "none";
-document.getElementById("adminMenu").style.display = "block";
-document.getElementById("userMenu").style.display = "none";
-document.getElementById("cameraSection").style.display = "none";
-document.getElementById("registerSection").style.display = "none";
-document.getElementById("userManagerSection").style.display = "none";
-document.getElementById("blacklistSection").style.display = "none";
-}
-function showUserMenu() {
-document.getElementById("authSection").style.display = "none";
-document.getElementById("adminMenu").style.display = "none";
-document.getElementById("userMenu").style.display = "block";
-document.getElementById("cameraSection").style.display = "none";
-document.getElementById("registerSection").style.display = "none";
-document.getElementById("userManagerSection").style.display = "none";
-document.getElementById("blacklistSection").style.display = "none";
-}
-
-// ===== CAMERA + AI =====
-const canvas = document.createElement('canvas');
-const video = document.getElementById('video');
-const resultBox = document.getElementById('result');
-let videoStream;
-let useFront = false;
-
-function startCamera() {
-navigator.mediaDevices.getUserMedia({
-  video: { facingMode: useFront ? "user" : "environment" }
-}).then(stream => {
-  videoStream = stream;
-  video.srcObject = stream;
-}).catch(err => {
-  resultBox.style.display = "block";
-  resultBox.textContent = "📵 กล้องไม่ทำงาน: " + err.message;
-});
-}
-function switchCamera() {
-if (videoStream) videoStream.getTracks().forEach(track => track.stop());
-useFront = !useFront;
-startCamera();
-}
-function saveImage() {
-const a = document.createElement("a");
-canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-canvas.getContext("2d").drawImage(video, 0, 0);
-a.href = canvas.toDataURL("image/jpeg");
-a.download = "plate.jpg";
-a.click();
-}
-function capture() {
-canvas.width = video.videoWidth;
-canvas.height = video.videoHeight;
-canvas.getContext("2d").drawImage(video, 0, 0);
-resultBox.style.display = "block";
-resultBox.textContent = "🔄 กำลังประมวลผล...";
-canvas.toBlob(async (blob) => {
-  const formData = new FormData();
-  formData.append("file", blob, "photo.jpg");
-  try {
-    const res = await fetch("https://api.iapp.co.th/license-plate-recognition/file", {
-      method: "POST",
-      headers: { apikey: "RiGPS2qwIWmVMC2efLLJ6p4wL2SkrqYx" },
-      body: formData
+            <b>Role:</b>
+            <select onchange="updateUserRole('${doc.id}', this.value)">
+              <option value="user" ${u.role === "user" ? "selected" : ""}>user</option>
+              <option value="admin" ${u.role === "admin" ? "selected" : ""}>admin</option>
+            </select>
+            <button onclick="deleteUser('${doc.id}')" style="background:#ff5e57; margin-left:12px;padding:3px 13px; border-radius:9px;">ลบ</button>
+          </div>
+        `;
+      });
+      document.getElementById("userManagerList").innerHTML = html || "ไม่พบผู้ใช้ในระบบ";
     });
-    const data = await res.json();
-    if (data.status === 200 && data.lp_number) {
-      resultBox.innerHTML = `
+  }
+  function updateUserRole(uid, role) {
+    db.collection("users").doc(uid).update({ role }).then(showUserManager);
+  }
+  function deleteUser(uid) {
+    if (!confirm("⚠️ ต้องการลบผู้ใช้นี้จริงหรือไม่?")) return;
+    db.collection("users").doc(uid).delete().then(showUserManager);
+    // หมายเหตุ: ลบ Auth จริงต้องใช้ Firebase Admin SDK (server)
+  }
+  function backToAdminMenu() {
+    showAdminMenu();
+  }
+
+  // BLACKLIST MANAGER
+  function showBlacklist() {
+    document.getElementById("adminMenu").style.display = "none";
+    document.getElementById("blacklistSection").style.display = "block";
+    document.getElementById("userManagerSection").style.display = "none";
+    document.getElementById("blacklistList").innerHTML = "⏳ กำลังโหลด...";
+    db.collection("blacklist").orderBy("plate").get().then(snapshot => {
+      let html = "";
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        html += `
+          <div style="background:#fff2; margin-bottom:10px; padding:11px 12px; border-radius:12px; box-shadow:0 1px 7px #00e5ff20;">
+            <b>🚗 ทะเบียน:</b> ${data.plate}
+            <button onclick="deleteBlacklist('${doc.id}')" style="background:#ff5e57; margin-left:15px;padding:3px 13px; border-radius:9px;">ลบ</button>
+          </div>
+        `;
+      });
+      document.getElementById("blacklistList").innerHTML = html || "<i>ไม่มีทะเบียนที่ถูกแบล็คลิสต์</i>";
+    });
+  }
+  function addBlacklist() {
+    const plate = document.getElementById("blacklistPlateInput").value.trim();
+    if (!plate) return alert("กรุณากรอกป้ายทะเบียน");
+    db.collection("blacklist").add({ plate })
+      .then(() => {
+        document.getElementById("blacklistPlateInput").value = "";
+        showBlacklist();
+      });
+  }
+  function deleteBlacklist(id) {
+    if (!confirm("ลบทะเบียนนี้ออกจากแบล็คลิสต์จริงหรือไม่?")) return;
+    db.collection("blacklist").doc(id).delete().then(showBlacklist);
+  }
+
+  // CAMERA + AI
+  const canvas = document.createElement('canvas');
+  const video = document.getElementById('video');
+  const resultBox = document.getElementById('result');
+  let videoStream;
+  let useFront = false;
+
+  function startCamera() {
+    navigator.mediaDevices.getUserMedia({
+      video: { facingMode: useFront ? "user" : "environment" }
+    }).then(stream => {
+      videoStream = stream;
+      video.srcObject = stream;
+    }).catch(err => {
+      resultBox.style.display = "block";
+      resultBox.textContent = "📵 กล้องไม่ทำงาน: " + err.message;
+    });
+  }
+  function switchCamera() {
+    if (videoStream) videoStream.getTracks().forEach(track => track.stop());
+    useFront = !useFront;
+    startCamera();
+  }
+  function saveImage() {
+    const a = document.createElement("a");
+    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+    canvas.getContext("2d").drawImage(video, 0, 0);
+    a.href = canvas.toDataURL("image/jpeg");
+    a.download = "plate.jpg";
+    a.click();
+  }
+  function capture() {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext("2d").drawImage(video, 0, 0);
+    resultBox.style.display = "block";
+    resultBox.textContent = "🔄 กำลังประมวลผล...";
+    canvas.toBlob(async (blob) => {
+      const formData = new FormData();
+      formData.append("file", blob, "photo.jpg");
+      try {
+        const res = await fetch("https://api.iapp.co.th/license-plate-recognition/file", {
+          method: "POST",
+          headers: { apikey: "RiGPS2qwIWmVMC2efLLJ6p4wL2SkrqYx" },
+          body: formData
+        });
+        const data = await res.json();
+        if (data.status === 200 && data.lp_number) {
+          resultBox.innerHTML = `
 ✅ ตรวจพบป้ายทะเบียน:
 ----------------------------------------
 🚗 ${data.lp_number}
@@ -380,65 +452,65 @@ canvas.toBlob(async (blob) => {
 🔍 รุ่น: ${data.vehicle_model}
 🎨 สี: ${data.vehicle_color}
 📈 ความมั่นใจ: ${data.conf.toFixed(1)}%
-      `;
-      // ตรวจสอบ blacklist
-      const blSnap = await db.collection("blacklist").where("plate", "==", data.lp_number).get();
-      if (!blSnap.empty) {
-        resultBox.innerHTML += `<br>🚨 <span style="color:#ff5e57;font-weight:bold;">ทะเบียนนี้อยู่ในแบล็คลิสต์!</span>`;
+          `;
+          // ตรวจสอบ blacklist
+          const blSnap = await db.collection("blacklist").where("plate", "==", data.lp_number).get();
+          if (!blSnap.empty) {
+            resultBox.innerHTML += `<br>🚨 <span style="color:#ff5e57;font-weight:bold;">ทะเบียนนี้อยู่ในแบล็คลิสต์!</span>`;
+          }
+          const doc = await db.collection("vehicles").doc(data.lp_number).get();
+          if (doc.exists) {
+            resultBox.innerHTML += `<br>👤 เจ้าของรถ: ${doc.data().owner}`;
+          } else {
+            resultBox.innerHTML += `<br>⚠️ ยังไม่มีข้อมูลเจ้าของในระบบ`;
+          }
+        } else {
+          resultBox.textContent = "❌ ไม่พบป้ายทะเบียนหรือรูปไม่ชัด";
+        }
+      } catch (e) {
+        resultBox.textContent = "❌ เกิดข้อผิดพลาด: " + e.message;
       }
-      const doc = await db.collection("vehicles").doc(data.lp_number).get();
-      if (doc.exists) {
-        resultBox.innerHTML += `<br>👤 เจ้าของรถ: ${doc.data().owner}`;
-      } else {
-        resultBox.innerHTML += `<br>⚠️ ยังไม่มีข้อมูลเจ้าของในระบบ`;
-      }
-    } else {
-      resultBox.textContent = "❌ ไม่พบป้ายทะเบียนหรือรูปไม่ชัด";
-    }
-  } catch (e) {
-    resultBox.textContent = "❌ เกิดข้อผิดพลาด: " + e.message;
+    }, "image/jpeg");
   }
-}, "image/jpeg");
-}
 
-// ===== REGISTER VEHICLE =====
-function registerVehicle() {
-const lp = document.getElementById("lpInput").value.trim();
-const owner = document.getElementById("ownerInput").value.trim();
-const resultBox = document.getElementById("registerResult");
-resultBox.style.display = "block";
-if (!lp || !owner) return resultBox.textContent = "⚠️ กรุณากรอกให้ครบ";
-db.collection("vehicles").doc(lp).set({ owner })
-  .then(() => resultBox.textContent = "✅ ลงทะเบียนเรียบร้อย")
-  .catch(e => resultBox.textContent = "❌ เกิดข้อผิดพลาด: " + e.message);
-}
+  // REGISTER VEHICLE
+  function registerVehicle() {
+    const lp = document.getElementById("lpInput").value.trim();
+    const owner = document.getElementById("ownerInput").value.trim();
+    const resultBox = document.getElementById("registerResult");
+    resultBox.style.display = "block";
+    if (!lp || !owner) return resultBox.textContent = "⚠️ กรุณากรอกให้ครบ";
+    db.collection("vehicles").doc(lp).set({ owner })
+      .then(() => resultBox.textContent = "✅ ลงทะเบียนเรียบร้อย")
+      .catch(e => resultBox.textContent = "❌ เกิดข้อผิดพลาด: " + e.message);
+  }
 
-// ===== AUTO LOGIN + ROLE =====
-auth.onAuthStateChanged(user => {
-if (user) {
-  db.collection("users").doc(user.uid).get().then(doc => {
-    if (doc.exists) {
-      const role = doc.data().role;
-      if (role === "admin") {
-        showAdminMenu();
-      } else {
-        showUserMenu();
-      }
+  // AUTO LOGIN + ROLE CHECK
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      db.collection("users").doc(user.uid).get().then(doc => {
+        if (doc.exists) {
+          const role = doc.data().role;
+          if (role === "admin") {
+            showAdminMenu();
+          } else {
+            showUserMenu();
+          }
+        } else {
+          alert("⚠️ ไม่พบข้อมูลสิทธิ์ของผู้ใช้ใน Firestore");
+          logout();
+        }
+      });
     } else {
-      alert("⚠️ ไม่พบข้อมูลสิทธิ์ของผู้ใช้ใน Firestore");
-      logout();
+      document.getElementById("authSection").style.display = "block";
+      document.getElementById("adminMenu").style.display = "none";
+      document.getElementById("userMenu").style.display = "none";
+      document.getElementById("cameraSection").style.display = "none";
+      document.getElementById("registerSection").style.display = "none";
+      document.getElementById("userManagerSection").style.display = "none";
+      document.getElementById("blacklistSection").style.display = "none";
     }
   });
-} else {
-  document.getElementById("authSection").style.display = "block";
-  document.getElementById("adminMenu").style.display = "none";
-  document.getElementById("userMenu").style.display = "none";
-  document.getElementById("cameraSection").style.display = "none";
-  document.getElementById("registerSection").style.display = "none";
-  document.getElementById("userManagerSection").style.display = "none";
-  document.getElementById("blacklistSection").style.display = "none";
-}
-});
 </script>
 </body>
 </html>
