@@ -1,334 +1,173 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <link rel="manifest" href="manifest.json">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#000000">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta charset="UTF-8" />
-  <title>ระบบกล้องตรวจทะเบียน</title>
+  <title>AI Camera สแกนทะเบียนรถ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-
+  <!-- Material Icon & Animation -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"/>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
-
-body {
-  font-family: 'Comic Neue', cursive, sans-serif;
-  background: linear-gradient(135deg, #00bcd4 0%, #008ba3 100%);
-  color: #fff;
-  margin: 0;
-  padding: 20px 10px;
-  box-sizing: border-box;
-  min-height: 100vh;
-}
-
-.container {
-  background-color: rgba(10, 20, 30, 0.85);
-  border: 3px solid #00e5ff;
-  box-shadow: 0 0 15px #00e5ff;
-  border-radius: 20px;
-  padding: 25px 20px;
-  max-width: 420px;
-  margin: auto;
-  text-align: center;
-}
-
-/* หัวข้อ */
-h2, h3 {
-  margin-bottom: 15px;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
-}
-
-/* ปุ่ม */
-button {
-  background: linear-gradient(45deg, #00e5ff, #008ba3);
-  border: 2px solid #00bcd4;
-  font-weight: 700;
-  box-shadow: 0 4px 8px #00bcd4aa;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-radius: 12px;
-  padding: 12px 18px;
-  font-size: 16px;
-  color: #fff;
-  width: 90%;
-  max-width: 360px;
-  margin: 10px auto;
-  display: block;
-}
-
-button:hover {
-  background: linear-gradient(45deg, #008ba3, #00e5ff);
-  box-shadow: 0 6px 14px #00e5ffaa;
-  transform: translateY(-3px);
-}
-
-button:active {
-  transform: translateY(0);
-  box-shadow: 0 3px 8px #007e91aa;
-}
-
-/* ช่องกรอกข้อมูล */
-input {
-  border: 2px solid #00bcd4;
-  padding: 12px 16px 12px 40px;
-  font-size: 16px;
-  border-radius: 12px;
-  margin: 10px auto;
-  width: 90%;
-  max-width: 360px;
-  display: block;
-  background: url('data:image/svg+xml;utf8,<svg fill="%2300bcd4" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/></svg>') no-repeat 10px center;
-  background-color: #fff;
-  background-size: 20px 20px;
-  color: #000;
-  box-sizing: border-box;
-}
-
-input::placeholder {
-  color: #666;
-}
-
-/* กล่องผลลัพธ์ */
-.result {
-  font-family: 'Courier New', monospace;
-  background: rgba(0, 0, 0, 0.5);
-  border-left: 6px solid #00e5ff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  margin-top: 20px;
-  color: #fff;
-  text-align: left;
-  white-space: pre-wrap;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* วิดีโอ และ แคนวาส */
-video, canvas {
-  width: 90%;
-  max-width: 420px;
-  border-radius: 15px;
-  margin: 15px auto;
-  display: block;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
-  background: #000;
-}
-
-/* ซ่อนหน้าไม่ใช้งาน */
-#cameraSection, #registerSection {
-  display: none;
-}
-
-/* Responsive ปรับขนาดสำหรับมือถือ */
-@media (max-width: 480px) {
-  body {
-    padding: 12px 8px;
-    font-size: 15px;
-  }
-
-  h2, h3 {
-    font-size: 18px;
-  }
-
-  .container {
-    padding: 18px 12px;
-    border-radius: 15px;
-  }
-
-  input, button {
-    font-size: 15px;
-    padding: 10px 14px 10px 38px;
-    max-width: 100%;
-    border-radius: 10px;
-  }
-
-  button {
-    padding: 10px 14px;
-  }
-
-  video, canvas {
-    max-width: 100%;
-    border-radius: 12px;
-  }
-
-  .result {
-    font-size: 13.5px;
-    padding: 15px;
-    max-width: 95%;
-    min-height: 110px;
-  }
-}
-    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap');
-
-    /* ฟอนต์สวยอ่านง่าย */
+    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap');
     body {
       font-family: 'Prompt', sans-serif;
-      background: linear-gradient(135deg, #80d0c7, #13547a);
-      color: #f0f9ff;
-      text-align: center;
-      padding: 20px 10px 40px;
-      min-height: 100vh;
-      margin: 0;
-      box-sizing: border-box;
+      background: linear-gradient(120deg, #2b5876 0%, #4e4376 100%);
+      min-height: 100vh; margin: 0; color: #fff; padding: 0; overflow-x: hidden;
     }
-    h2, h3 {
-      font-weight: 600;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    .main-card {
+      margin: 30px auto 0 auto;
+      max-width: 390px;
+      background: rgba(30,40,60,0.88);
+      border-radius: 28px;
+      padding: 34px 18px 30px;
+      box-shadow: 0 10px 40px #2b587680;
+      position: relative;
+      animation: fadeInDown 1s;
+      backdrop-filter: blur(6px);
     }
-
-    /* กล่อง Container */
-    #authSection, #mainSection, #cameraSection, #registerSection {
-      background: rgba(255 255 255 / 0.1);
-      border-radius: 20px;
-      padding: 25px 20px;
-      max-width: 420px;
-      margin: 15px auto;
-      box-shadow: 0 8px 20px rgb(0 0 0 / 0.2);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+    .main-card::before {
+      content: "";
+      position: absolute; inset: 0; border-radius: 30px; z-index: -1;
+      background: linear-gradient(135deg, #00e5ff33 0%, #ff4081 100%);
+      filter: blur(20px); opacity: 0.4;
     }
-
-    input, button {
-      width: 90%;
-      max-width: 400px;
-      padding: 14px 18px;
-      margin: 10px auto;
-      font-size: 18px;
-      border-radius: 15px;
-      border: none;
-      outline: none;
-      display: block;
-      transition: all 0.3s ease;
-      font-weight: 600;
-      box-shadow: 0 3px 6px rgb(0 0 0 / 0.15);
+    .main-card h2, .main-card h3 {
+      font-weight: 700; letter-spacing: 1px;
+      font-size: 2rem; text-shadow: 0 2px 16px #1e2942cc;
+      margin-bottom: 12px; color: #00e5ff;
     }
-
-    input {
-      background: #f0f9ff;
-      color: #13547a;
-      border: 2px solid #a7d8d2;
-      text-align: center;
-    }
-    input::placeholder {
-      color: #679ea7;
-      font-weight: 400;
-    }
-    input:focus {
-      border-color: #00e5ff;
-      box-shadow: 0 0 8px #00e5ffaa;
-    }
-
-    button {
-      background: linear-gradient(45deg, #00e5ff, #008ba3);
+    .main-card .bigicon {
+      font-size: 60px;
       color: #fff;
-      cursor: pointer;
-      font-weight: 700;
-      box-shadow: 0 6px 14px #008ba3cc;
-      user-select: none;
-      border: 2px solid transparent;
-    }
-    button:hover {
-      background: linear-gradient(45deg, #008ba3, #00e5ff);
-      box-shadow: 0 8px 20px #00e5ffaa;
-      transform: translateY(-3px);
-      border-color: #00e5ff;
-    }
-    button:active {
-      transform: translateY(0);
-      box-shadow: 0 4px 10px #00727dcc;
-    }
-
-    /* วิดีโอและแคนวาส */
-    video, canvas {
-      width: 90%;
-      max-width: 420px;
+      background: linear-gradient(45deg, #00e5ff 60%, #e040fb 120%);
       border-radius: 20px;
-      margin: 20px auto 10px;
-      box-shadow: 0 6px 18px rgb(0 0 0 / 0.3);
-      background: #000;
+      width: 80px; height: 80px; line-height: 80px;
+      margin: 0 auto 12px auto;
+      box-shadow: 0 6px 20px #00e5ff33;
+      display: flex; align-items: center; justify-content: center;
+      animation: bounceIn 1.2s;
     }
-
-    /* กล่องแสดงผลลัพธ์ */
-    .result {
-      background: rgba(255 255 255 / 0.9);
-      color: #13547a;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-      margin: 20px auto 0;
-      font-family: 'Courier New', monospace;
-      white-space: pre-wrap;
-      text-align: left;
-      max-width: 420px;
-      user-select: text;
-      min-height: 130px;
+    .form-section, #mainSection, #cameraSection, #registerSection { margin: 14px 0 4px; }
+    .input-group { position: relative; margin-bottom: 18px;}
+    .input-group .material-icons {
+      position: absolute; left: 14px; top: 12px; color: #00e5ff; opacity: 0.8; font-size: 24px;
     }
-
-    /* ซ่อนส่วนที่ยังไม่แสดง */
-    #cameraSection, #registerSection {
+    .input-group input {
+      width: 100%;
+      max-width: 280px;
+      padding: 11px 15px 11px 40px;
+      border-radius: 13px;
+      border: none;
+      background: #fff4;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      transition: box-shadow .2s;
+      box-shadow: 0 1px 8px #00e5ff22;
+      margin: 0 auto 12px auto;
+      display: block;
+    }
+    .input-group input:focus { background: #ffffff66; color: #333; box-shadow: 0 4px 16px #00e5ff99; }
+    .btn-main, button {
+      width: 100%; padding: 13px 0; border-radius: 22px;
+      background: linear-gradient(45deg, #00e5ff, #e040fb 95%);
+      border: none; font-weight: bold; font-size: 17px;
+      color: #fff; cursor: pointer; margin-bottom: 10px; margin-top: 5px;
+      box-shadow: 0 4px 12px #e040fb44; transition: transform .14s, box-shadow .14s;
+    }
+    .btn-main:hover, button:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 8px 30px #00e5ff55;
+      background: linear-gradient(45deg, #e040fb, #00e5ff 90%);
+    }
+    .login-tips { text-align: left; font-size: 14px; color: #a5e9ff; margin-bottom: 8px; }
+    .copyright {
+      margin: 30px auto 0;
+      color: #b7daf2; font-size: 13px; opacity: 0.8; text-align: center; letter-spacing: 0.5px;
+    }
+    .result-card, #result {
+      margin-top: 20px; padding: 17px; border-radius: 14px;
+      background: rgba(0, 229, 255, 0.11); color: #fff; font-family: 'Courier New', monospace;
+      font-size: 15.5px; box-shadow: 0 2px 12px #00e5ff33; min-height: 50px;
+      white-space: pre-line; word-break: break-word;
+      animation: fadeInUp 1.2s;
       display: none;
     }
-
-    /* ปุ่มเมนูหลัก */
-    #mainSection button {
-      margin: 15px auto;
-      width: 90%;
-      max-width: 300px;
-      font-size: 20px;
-      border-radius: 30px;
-      box-shadow: 0 6px 15px rgb(0 0 0 / 0.25);
-    }
-
-    /* Responsive */
-    @media (max-width: 480px) {
-      body {
-        padding: 15px 8px 30px;
-      }
-      input, button, video, canvas {
-        width: 100%;
-        max-width: 100%;
-      }
-      #mainSection button {
-        max-width: 100%;
-      }
-    }
+    #mainSection, #cameraSection, #registerSection { display: none; }
+    video, canvas { width: 100%; border-radius: 14px; margin-top: 8px; background: #000; }
+    @media (max-width: 500px) { .main-card { margin: 15px 2px 0 2px; } .copyright { font-size: 11px;}}
   </style>
 </head>
 <body>
-  <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-  }
-</script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('✅ Service Worker registered', reg))
-      .catch(err => console.error('❌ SW registration failed:', err));
-  }
-</script>
-  <h2>🔐 เข้าสู่ระบบ / สมัครสมาชิก</h2>
+<div class="main-card animate__animated animate__fadeInDown">
+  <div class="bigicon animate__animated animate__bounceIn">
+    <span class="material-icons">directions_car</span>
+  </div>
+  <!-- LOGIN -->
   <div id="authSection">
-    <input id="email" type="email" placeholder="อีเมล" />
-    <input id="password" type="password" placeholder="รหัสผ่าน" />
-    <button onclick="login()">เข้าสู่ระบบ</button>
-    <button onclick="signup()">สมัครสมาชิก</button>
+    <h2>เข้าสู่ระบบ</h2>
+    <div class="login-tips">ระบบตรวจจับป้ายทะเบียนรถด้วย AI<br>สะดวก ปลอดภัย แม่นยำ!</div>
+    <form class="form-section" onsubmit="event.preventDefault();login();">
+      <div class="input-group">
+        <span class="material-icons">person</span>
+        <input id="email" type="email" placeholder="อีเมล" required />
+      </div>
+      <div class="input-group">
+        <span class="material-icons">lock</span>
+        <input id="password" type="password" placeholder="รหัสผ่าน" required />
+      </div>
+      <button type="submit" class="btn-main">เข้าสู่ระบบ</button>
+      <button type="button" class="btn-main" style="background:#0ed95c;" onclick="signup()">สมัครสมาชิก</button>
+    </form>
+    <div id="loginResult" class="result-card"></div>
   </div>
 
-  <div id="mainSection" style="display:none">
+  <!-- ADMIN MENU -->
+  <div id="adminMenu" style="display:none;">
+    <h3>เมนูผู้ดูแลระบบ</h3>
     <button onclick="showCameraSection()">📷 ตรวจป้ายทะเบียน</button>
     <button onclick="showRegisterSection()">📝 ลงทะเบียนรถ</button>
-    <button onclick="logout()">🚪 ออกจากระบบ</button>
+    <button onclick="showUserManager()">👤 จัดการยูสเซอร์</button>
+    <button onclick="showBlacklist()">🚫 แบล็คลิสต์</button>
+    <button style="background:#ff5e57;" onclick="logout()">🚪 ออกจากระบบ</button>
   </div>
 
+  <!-- USER MENU -->
+  <div id="userMenu" style="display:none;">
+    <h3>เมนูผู้ใช้งาน</h3>
+    <button onclick="showCameraSection()">📷 ตรวจป้ายทะเบียน</button>
+    <button style="background:#ff5e57;" onclick="logout()">🚪 ออกจากระบบ</button>
+  </div>
+
+  <!-- USER MANAGER -->
+  <div id="userManagerSection" style="display:none;">
+    <h3>👤 จัดการยูสเซอร์</h3>
+    <div id="userManagerList" style="font-size:15px; margin-bottom:18px;"></div>
+    <button class="btn-main" style="background:#00bfae; margin-top:10px;" onclick="backToAdminMenu()">↩️ กลับเมนูแอดมิน</button>
+  </div>
+
+  <!-- BLACKLIST MANAGER -->
+  <div id="blacklistSection" style="display:none;">
+    <h3>🚫 ระบบแบล็คลิสต์</h3>
+    <form onsubmit="event.preventDefault(); addBlacklist();">
+      <div class="input-group">
+        <span class="material-icons">directions_car</span>
+        <input id="blacklistPlateInput" placeholder="ป้อนทะเบียนรถต้องห้าม" required />
+      </div>
+      <button type="submit" class="btn-main" style="background:#ff5e57;">➕ เพิ่มแบล็คลิสต์</button>
+    </form>
+    <div id="blacklistList" style="margin-top:14px;"></div>
+    <button class="btn-main" style="background:#00bfae; margin-top:18px;" onclick="backToAdminMenu()">↩️ กลับเมนูแอดมิน</button>
+  </div>
+
+  <!-- MENU -->
+  <div id="mainSection">
+    <h3>เมนูหลัก</h3>
+    <button onclick="showCameraSection()">📷 ตรวจป้ายทะเบียน</button>
+    <button onclick="showRegisterSection()">📝 ลงทะเบียนรถ</button>
+    <button style="background:#ff5e57;" onclick="logout()">🚪 ออกจากระบบ</button>
+  </div>
+  <!-- CAMERA -->
   <div id="cameraSection">
     <h3>📷 กล้อง + สแกนป้ายทะเบียน</h3>
     <video id="video" autoplay playsinline></video>
@@ -336,77 +175,281 @@ video, canvas {
     <button onclick="switchCamera()">🔁 สลับกล้อง</button>
     <button onclick="saveImage()">💾 บันทึกภาพ</button>
     <canvas id="canvas" style="display:none;"></canvas>
-    <div class="result" id="result">⬅️ กดถ่ายภาพเพื่อเริ่ม</div>
+    <div id="result" class="result-card"></div>
+    <button style="background:#00bfae; margin-top:12px;" onclick="backToMenu()">↩️ กลับเมนู</button>
   </div>
-
+  <!-- REGISTER -->
   <div id="registerSection">
     <h3>📝 ลงทะเบียนเจ้าของรถ</h3>
-    <input id="lpInput" placeholder="🔒 ป้ายทะเบียน" />
-    <input id="ownerInput" placeholder="👤 ชื่อเจ้าของ" />
-    <button onclick="registerVehicle()">➕ ลงทะเบียนรถ</button>
+    <div class="input-group">
+      <span class="material-icons">directions_car</span>
+      <input id="lpInput" placeholder="🔒 ป้ายทะเบียน" />
+    </div>
+    <div class="input-group">
+      <span class="material-icons">person</span>
+      <input id="ownerInput" placeholder="👤 ชื่อเจ้าของ" />
+    </div>
+    <button onclick="registerVehicle()" class="btn-main">➕ ลงทะเบียนรถ</button>
+    <div id="registerResult" class="result-card"></div>
+    <button style="background:#00bfae; margin-top:12px;" onclick="backToMenu()">↩️ กลับเมนู</button>
   </div>
+</div>
+<div class="copyright">
+  © 2025 AI License Plate Scanner<br>
+  <span style="font-size:11px;">Design by <b>คุณเอง + ChatGPT</b></span>
+</div>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyB75DQ7tEeOY1X1fYsajZFKb-UHt7A1RZQ",
-      authDomain: "ai-api-lpr.firebaseapp.com",
-      projectId: "ai-api-lpr",
-      storageBucket: "ai-api-lpr.appspot.com",
-      messagingSenderId: "739330555170",
-      appId: "1:739330555170:web:e9b8c107a5398461ef397b",
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script>
+  // Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyB75DQ7tEeOY1X1fYsajZFKb-UHt7A1RZQ",
+    authDomain: "ai-api-lpr.firebaseapp.com",
+    projectId: "ai-api-lpr",
+    storageBucket: "ai-api-lpr.appspot.com",
+    messagingSenderId: "739330555170",
+    appId: "1:739330555170:web:e9b8c107a5398461ef397b",
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
 
-    const canvas = document.getElementById('canvas');
-    const video = document.getElementById('video');
-    const resultBox = document.getElementById('result');
-    let videoStream;
-    let useFront = false;
+  // ================= LOGIN / SIGNUP =================
+  function login() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const resultBox = document.getElementById('loginResult');
+    resultBox.style.display = "block";
+    resultBox.textContent = "⏳ กำลังเข้าสู่ระบบ...";
+    auth.signInWithEmailAndPassword(email, password)
+      .then(() => {
+        resultBox.textContent = "✅ สำเร็จ! กำลังเข้าสู่ระบบ...";
+        setTimeout(() => {
+          resultBox.style.display = "none";
+        }, 600);
+      })
+      .catch(e => {
+        resultBox.textContent = "❌ " + e.message;
+      });
+  }
+  function signup() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const resultBox = document.getElementById('loginResult');
+    resultBox.style.display = "block";
+    if (!email || !password) return resultBox.textContent = "⚠️ กรอกอีเมลและรหัสผ่าน";
+    auth.createUserWithEmailAndPassword(email, password)
+      .then(cred => {
+        return db.collection("users").doc(cred.user.uid).set({
+          email: email,
+          role: "user"
+        });
+      })
+      .then(() => resultBox.textContent = "✅ สมัครเรียบร้อย ล็อกอินได้เลย!")
+      .catch(e => resultBox.textContent = "❌ " + e.message);
+  }
+  function logout() {
+    auth.signOut().then(() => {
+      document.getElementById("authSection").style.display = "block";
+      document.getElementById("adminMenu").style.display = "none";
+      document.getElementById("userMenu").style.display = "none";
+      document.getElementById("mainSection").style.display = "none";
+      document.getElementById("cameraSection").style.display = "none";
+      document.getElementById("registerSection").style.display = "none";
+      document.getElementById("userManagerSection").style.display = "none";
+      document.getElementById("blacklistSection").style.display = "none";
+      document.getElementById('email').value = "";
+      document.getElementById('password').value = "";
+      document.getElementById('loginResult').style.display = "none";
+    });
+  }
+  // ================= MENU =================
+  function showCameraSection() {
+    document.getElementById("adminMenu")?.style.display = "none";
+    document.getElementById("userMenu")?.style.display = "none";
+    document.getElementById("mainSection")?.style.display = "none";
+    document.getElementById("cameraSection").style.display = "block";
+    document.getElementById("registerSection").style.display = "none";
+    document.getElementById("userManagerSection").style.display = "none";
+    document.getElementById("blacklistSection").style.display = "none";
+    document.getElementById('result').style.display = "none";
+    startCamera();
+  }
+  function showRegisterSection() {
+    document.getElementById("adminMenu")?.style.display = "none";
+    document.getElementById("userMenu")?.style.display = "none";
+    document.getElementById("mainSection")?.style.display = "none";
+    document.getElementById("cameraSection").style.display = "none";
+    document.getElementById("registerSection").style.display = "block";
+    document.getElementById("userManagerSection").style.display = "none";
+    document.getElementById("blacklistSection").style.display = "none";
+    document.getElementById('registerResult').style.display = "none";
+    if (videoStream) videoStream.getTracks().forEach(track => track.stop());
+  }
+  function backToMenu() {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        db.collection("users").doc(user.uid).get().then(doc => {
+          if (doc.exists) {
+            const role = doc.data().role;
+            if (role === "admin") {
+              showAdminMenu();
+            } else {
+              showUserMenu();
+            }
+          }
+        });
+      }
+    });
+    document.getElementById("cameraSection").style.display = "none";
+    document.getElementById("registerSection").style.display = "none";
+    document.getElementById("userManagerSection").style.display = "none";
+    document.getElementById("blacklistSection").style.display = "none";
+    if (videoStream) videoStream.getTracks().forEach(track => track.stop());
+  }
 
-    function startCamera() {
-      navigator.mediaDevices.getUserMedia({
-        video: { facingMode: useFront ? "user" : "environment" }
-      }).then(stream => {
-        videoStream = stream;
-        video.srcObject = stream;
-      }).catch(err => alert("📵 กล้องไม่ทำงาน: " + err.message));
-    }
+  // ========== USER MANAGER =============
+  function showUserManager() {
+    document.getElementById("adminMenu").style.display = "none";
+    document.getElementById("userManagerSection").style.display = "block";
+    document.getElementById("blacklistSection").style.display = "none";
+    document.getElementById("userManagerList").innerHTML = "⏳ กำลังโหลด...";
+    db.collection("users").get().then(snapshot => {
+      let html = "";
+      snapshot.forEach(doc => {
+        const u = doc.data();
+        html += `
+          <div style="background:#fff2;padding:12px 10px;margin-bottom:8px;border-radius:12px;box-shadow:0 1px 7px #00e5ff20;">
+            <b>Email:</b> ${u.email || "(ไม่พบอีเมล)"}<br>
+            <b>Role:</b> 
+            <select onchange="updateUserRole('${doc.id}', this.value)">
+              <option value="user" ${u.role === "user" ? "selected" : ""}>user</option>
+              <option value="admin" ${u.role === "admin" ? "selected" : ""}>admin</option>
+            </select>
+            <button onclick="deleteUser('${doc.id}')" style="background:#ff5e57; margin-left:12px;padding:3px 13px; border-radius:9px;">ลบ</button>
+          </div>
+        `;
+      });
+      document.getElementById("userManagerList").innerHTML = html || "ไม่พบผู้ใช้ในระบบ";
+    });
+  }
+  function updateUserRole(uid, role) {
+    db.collection("users").doc(uid).update({ role }).then(showUserManager);
+  }
+  function deleteUser(uid) {
+    if (!confirm("⚠️ ต้องการลบผู้ใช้นี้จริงหรือไม่?")) return;
+    db.collection("users").doc(uid).delete().then(showUserManager);
+    // หมายเหตุ: ลบออกจาก Auth จริงต้องใช้ Firebase Admin SDK (server)
+  }
 
-    function switchCamera() {
-      if (videoStream) videoStream.getTracks().forEach(track => track.stop());
-      useFront = !useFront;
-      startCamera();
-    }
+  // ========== BLACKLIST MANAGER =============
+  function showBlacklist() {
+    document.getElementById("adminMenu").style.display = "none";
+    document.getElementById("blacklistSection").style.display = "block";
+    document.getElementById("userManagerSection").style.display = "none";
+    document.getElementById("blacklistList").innerHTML = "⏳ กำลังโหลด...";
+    db.collection("blacklist").orderBy("plate").get().then(snapshot => {
+      let html = "";
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        html += `
+          <div style="background:#fff2; margin-bottom:10px; padding:11px 12px; border-radius:12px; box-shadow:0 1px 7px #00e5ff20;">
+            <b>🚗 ทะเบียน:</b> ${data.plate}
+            <button onclick="deleteBlacklist('${doc.id}')" style="background:#ff5e57; margin-left:15px;padding:3px 13px; border-radius:9px;">ลบ</button>
+          </div>
+        `;
+      });
+      document.getElementById("blacklistList").innerHTML = html || "<i>ไม่มีทะเบียนที่ถูกแบล็คลิสต์</i>";
+    });
+  }
+  function addBlacklist() {
+    const plate = document.getElementById("blacklistPlateInput").value.trim();
+    if (!plate) return alert("กรุณากรอกป้ายทะเบียน");
+    db.collection("blacklist").add({ plate })
+      .then(() => {
+        document.getElementById("blacklistPlateInput").value = "";
+        showBlacklist();
+      });
+  }
+  function deleteBlacklist(id) {
+    if (!confirm("ลบทะเบียนนี้ออกจากแบล็คลิสต์จริงหรือไม่?")) return;
+    db.collection("blacklist").doc(id).delete().then(showBlacklist);
+  }
 
-    function saveImage() {
-      const a = document.createElement("a");
-      a.href = canvas.toDataURL("image/jpeg");
-      a.download = "plate.jpg";
-      a.click();
-    }
+  // ================= ROLE-BASED MENU ================
+  function showAdminMenu() {
+    document.getElementById("authSection").style.display = "none";
+    document.getElementById("adminMenu").style.display = "block";
+    document.getElementById("userMenu").style.display = "none";
+    document.getElementById("mainSection").style.display = "none";
+    document.getElementById("cameraSection").style.display = "none";
+    document.getElementById("registerSection").style.display = "none";
+    document.getElementById("userManagerSection").style.display = "none";
+    document.getElementById("blacklistSection").style.display = "none";
+  }
+  function showUserMenu() {
+    document.getElementById("authSection").style.display = "none";
+    document.getElementById("adminMenu").style.display = "none";
+    document.getElementById("userMenu").style.display = "block";
+    document.getElementById("mainSection").style.display = "none";
+    document.getElementById("cameraSection").style.display = "none";
+    document.getElementById("registerSection").style.display = "none";
+    document.getElementById("userManagerSection").style.display = "none";
+    document.getElementById("blacklistSection").style.display = "none";
+  }
 
-    function capture() {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      canvas.getContext("2d").drawImage(video, 0, 0);
-      resultBox.textContent = "🔄 กำลังประมวลผล...";
+  // ================= CAMERA + AI =================
+  const canvas = document.createElement('canvas');
+  const video = document.getElementById('video');
+  const resultBox = document.getElementById('result');
+  let videoStream;
+  let useFront = false;
 
-      canvas.toBlob(async (blob) => {
-        const formData = new FormData();
-        formData.append("file", blob, "photo.jpg");
-
-        try {
-          const res = await fetch("https://api.iapp.co.th/license-plate-recognition/file", {
-            method: "POST",
-            headers: { apikey: "RiGPS2qwIWmVMC2efLLJ6p4wL2SkrqYx" },
-            body: formData
-          });
-
-          const data = await res.json();
-          if (data.status === 200 && data.lp_number) {
-            resultBox.innerHTML = `
+  function startCamera() {
+    navigator.mediaDevices.getUserMedia({
+      video: { facingMode: useFront ? "user" : "environment" }
+    }).then(stream => {
+      videoStream = stream;
+      video.srcObject = stream;
+    }).catch(err => {
+      resultBox.style.display = "block";
+      resultBox.textContent = "📵 กล้องไม่ทำงาน: " + err.message;
+    });
+  }
+  function switchCamera() {
+    if (videoStream) videoStream.getTracks().forEach(track => track.stop());
+    useFront = !useFront;
+    startCamera();
+  }
+  function saveImage() {
+    const a = document.createElement("a");
+    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+    canvas.getContext("2d").drawImage(video, 0, 0);
+    a.href = canvas.toDataURL("image/jpeg");
+    a.download = "plate.jpg";
+    a.click();
+  }
+  function capture() {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext("2d").drawImage(video, 0, 0);
+    resultBox.style.display = "block";
+    resultBox.textContent = "🔄 กำลังประมวลผล...";
+    canvas.toBlob(async (blob) => {
+      const formData = new FormData();
+      formData.append("file", blob, "photo.jpg");
+      try {
+        const res = await fetch("https://api.iapp.co.th/license-plate-recognition/file", {
+          method: "POST",
+          headers: { apikey: "RiGPS2qwIWmVMC2efLLJ6p4wL2SkrqYx" },
+          body: formData
+        });
+        const data = await res.json();
+        if (data.status === 200 && data.lp_number) {
+          resultBox.innerHTML = `
 ✅ ตรวจพบป้ายทะเบียน:
 ----------------------------------------
 🚗 ${data.lp_number}
@@ -415,88 +458,61 @@ video, canvas {
 🔍 รุ่น: ${data.vehicle_model}
 🎨 สี: ${data.vehicle_color}
 📈 ความมั่นใจ: ${data.conf.toFixed(1)}%
-            `;
-
-            const doc = await db.collection("vehicles").doc(data.lp_number).get();
-            if (doc.exists) {
-              resultBox.innerHTML += `\n👤 เจ้าของรถ: ${doc.data().owner}`;
-            } else {
-              resultBox.innerHTML += `\n⚠️ ยังไม่มีข้อมูลเจ้าของในระบบ`;
-            }
+          `;
+          const doc = await db.collection("vehicles").doc(data.lp_number).get();
+          if (doc.exists) {
+            resultBox.innerHTML += `<br>👤 เจ้าของรถ: ${doc.data().owner}`;
           } else {
-            resultBox.textContent = "❌ ไม่พบป้ายทะเบียนหรือรูปไม่ชัด";
+            resultBox.innerHTML += `<br>⚠️ ยังไม่มีข้อมูลเจ้าของในระบบ`;
           }
-        } catch (e) {
-          resultBox.textContent = "❌ เกิดข้อผิดพลาด: " + e.message;
+        } else {
+          resultBox.textContent = "❌ ไม่พบป้ายทะเบียนหรือรูปไม่ชัด";
         }
-      }, "image/jpeg");
-    }
-
-    function registerVehicle() {
-      const lp = document.getElementById("lpInput").value.trim();
-      const owner = document.getElementById("ownerInput").value.trim();
-      if (!lp || !owner) return alert("⚠️ กรุณากรอกให้ครบ");
-      db.collection("vehicles").doc(lp).set({ owner })
-        .then(() => alert("✅ ลงทะเบียนเรียบร้อย"))
-        .catch(e => alert("❌ เกิดข้อผิดพลาด: " + e.message));
-    }
-
-    function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-          document.getElementById("authSection").style.display = "none";
-          document.getElementById("mainSection").style.display = "block";
-          showCameraSection();
-        })
-        .catch(e => alert("❌ ล็อกอินล้มเหลว: " + e.message));
-    }
-
-    function signup() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(() => alert("✅ สมัครสำเร็จ"))
-        .catch(e => alert("❌ สมัครไม่สำเร็จ: " + e.message));
-    }
-
-    function logout() {
-      auth.signOut().then(() => {
-        document.getElementById("authSection").style.display = "block";
-        document.getElementById("mainSection").style.display = "none";
-        document.getElementById("cameraSection").style.display = "none";
-        document.getElementById("registerSection").style.display = "none";
-        if (videoStream) videoStream.getTracks().forEach(track => track.stop());
-      });
-    }
-
-    function showCameraSection() {
-      document.getElementById("cameraSection").style.display = "block";
-      document.getElementById("registerSection").style.display = "none";
-      startCamera();
-    }
-
-    function showRegisterSection() {
-      document.getElementById("cameraSection").style.display = "none";
-      document.getElementById("registerSection").style.display = "block";
-      if (videoStream) videoStream.getTracks().forEach(track => track.stop());
-    }
-
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        document.getElementById("authSection").style.display = "none";
-        document.getElementById("mainSection").style.display = "block";
-        showCameraSection();
+      } catch (e) {
+        resultBox.textContent = "❌ เกิดข้อผิดพลาด: " + e.message;
       }
-    });
-  </script>
+    }, "image/jpeg");
+  }
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js')
-        .then(() => console.log('Service Worker registered'));
+  // ================= REGISTER =================
+  function registerVehicle() {
+    const lp = document.getElementById("lpInput").value.trim();
+    const owner = document.getElementById("ownerInput").value.trim();
+    const resultBox = document.getElementById("registerResult");
+    resultBox.style.display = "block";
+    if (!lp || !owner) return resultBox.textContent = "⚠️ กรุณากรอกให้ครบ";
+    db.collection("vehicles").doc(lp).set({ owner })
+      .then(() => resultBox.textContent = "✅ ลงทะเบียนเรียบร้อย")
+      .catch(e => resultBox.textContent = "❌ เกิดข้อผิดพลาด: " + e.message);
+  }
+
+  // ================= AUTO LOGIN + ROLE =================
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      db.collection("users").doc(user.uid).get().then(doc => {
+        if (doc.exists) {
+          const role = doc.data().role;
+          if (role === "admin") {
+            showAdminMenu();
+          } else {
+            showUserMenu();
+          }
+        } else {
+          alert("⚠️ ไม่พบข้อมูลสิทธิ์ของผู้ใช้ใน Firestore");
+        }
+      });
+    } else {
+      document.getElementById("authSection").style.display = "block";
+      document.getElementById("adminMenu").style.display = "none";
+      document.getElementById("userMenu").style.display = "none";
+      document.getElementById("mainSection").style.display = "none";
+      document.getElementById("cameraSection").style.display = "none";
+      document.getElementById("registerSection").style.display = "none";
+      document.getElementById("userManagerSection").style.display = "none";
+      document.getElementById("blacklistSection").style.display = "none";
     }
-  </script>
+  });
+
+</script>
 </body>
 </html>
