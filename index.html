@@ -195,7 +195,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-
 <script>
   // Firebase Config (ของคุณ)
   const firebaseConfig = {
@@ -242,7 +241,7 @@
       .then(() => resultBox.textContent = "✅ สมัครเรียบร้อย ล็อกอินได้เลย!")
       .catch(e => resultBox.textContent = "❌ " + e.message);
   }
-</script>
+
   function logout() {
     auth.signOut().then(() => {
       document.getElementById("authSection").style.display = "block";
@@ -507,7 +506,6 @@
       document.getElementById("blacklistSection").style.display = "none";
     }
   });
-
 </script>
 </body>
 </html>
