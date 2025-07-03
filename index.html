@@ -180,7 +180,15 @@
     });
   }
   // ...โค้ดส่วนที่เหลือเหมือนกับที่คุณให้มาข้างบน... (ดูโพสต์ที่แล้ว)
-
+function showUserMenu() {
+  document.getElementById("authSection").style.display = "none";
+  document.getElementById("adminMenu").style.display = "none";
+  document.getElementById("userMenu").style.display = "block";
+  document.getElementById("cameraSection").style.display = "none";
+  document.getElementById("registerSection").style.display = "none";
+  document.getElementById("userManagerSection").style.display = "none";
+  document.getElementById("blacklistSection").style.display = "none";
+}
   // ================= AUTO LOGIN + ROLE =================
   auth.onAuthStateChanged(user => {
     if (user) {
